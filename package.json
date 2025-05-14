@@ -1,0 +1,17 @@
+{
+  "name": "qademo-cypress",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "open": "cypress open",
+    "test": "cypress run"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "allure-cypress": "^3.2.2",
+    "cypress": "^14.3.3"
+  }
+}
