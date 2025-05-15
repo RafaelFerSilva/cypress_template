@@ -5,12 +5,13 @@
   "main": "index.js",
   "scripts": {
     "open": "cypress open",
-    "test": "cypress run"
+    "test": "cypress run --env allure=true"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@shelex/cypress-allure-plugin": "^2.41.1",
     "allure-cypress": "^3.2.2",
     "cypress": "^14.3.3"
   }
