@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "open": "cypress open",
-    "test": "cypress run --env allure=true"
+    "test": "cypress run --env allure=true",
+    "report": "allure generate allure-results -o allure-report --clean && allure open"
   },
   "keywords": [],
   "author": "",
