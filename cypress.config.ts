@@ -1,10 +1,18 @@
-const { defineConfig } = require("cypress");
-const allureWriter = require('@shelex/cypress-allure-plugin/writer');
+import { defineConfig } from "cypress";
+import allureWriter from '@shelex/cypress-allure-plugin/writer';
+
+const urls = {
+  uat: 'https://demoqa.com/',
+  rc: 'https://demoqa.com/',
+  prod: 'https://demoqa.com/'
+};
 
 module.exports = defineConfig({
   e2e: {
     setupNodeEvents(on, config) {
       allureWriter(on, config);
+      const environment = config.env.ENV || 'uat';
+      config.baseUrl = urls[environment];
       return config;
     },
     chromeWebSecurity: false,

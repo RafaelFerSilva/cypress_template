@@ -1,7 +1,7 @@
 export default class HomePage {
   visitHomePage() {
     cy.allure().logStep('Visit Home Page');
-    cy.visit('https://demoqa.com/');
+    cy.visit('/');
   }
 
   validateHomePageLoaded() {
