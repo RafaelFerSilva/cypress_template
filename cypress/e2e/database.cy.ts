@@ -1,12 +1,4 @@
 describe('Test DB', () => {
-  beforeEach(() => {
-    cy.dbConnect();
-  });
-
-  afterEach(() => {
-    cy.dbClose();
-  });
-
   it('executa script SQL', () => {
     cy.dbExecuteScript('cypress/sql/test.sql');
   });
