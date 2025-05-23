@@ -8,7 +8,8 @@
     "test": "rm -rf allure-results && cypress run --env ENV=uat,allure=true",
     "test:rc": "rm -rf allure-results && cypress run --env ENV=rc,allure=true",
     "test:prod": "rm -rf allure-results && cypress run --env ENV=prod,allure=true",
-    "report": "allure generate --clean allure-results -o allure-report && allure open"
+    "report": "allure generate --clean allure-results -o allure-report && allure open",
+    "report:cy": "allure generate --clean allure-results -o allure-report && allure open"
   },
   "keywords": [],
   "author": "",
