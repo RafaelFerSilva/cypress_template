@@ -9,7 +9,28 @@ on:
 
 jobs:
   cypress-run:
+    permissions:
+        actions: read
+        checks: write
+        contents: read
+        pull-requests: write
     runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        ports:
+          - "3306:3306"
+        env:
+          MYSQL_ROOT_PASSWORD: rootpassword
+          MYSQL_DATABASE: testdb
+          MYSQL_USER: testuser
+          MYSQL_PASSWORD: testpassword
+        options: >-
+          --health-cmd="mysqladmin ping --host=localhost --user=root --password=rootpassword"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
 
     steps:
       - name: Checkout
@@ -18,7 +39,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 20
 
       - name: Cache dependencies
         uses: actions/cache@v3
@@ -47,4 +68,4 @@ jobs:
         with:
           name: allure-report
           path: allure-report
-          retention-days: 5
+          retention-days: 1
