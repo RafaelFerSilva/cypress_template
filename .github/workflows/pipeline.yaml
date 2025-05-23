@@ -53,6 +53,16 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+      
+      - name: Install MySQL Client & Python Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y mysql-client
+          python -m pip install --upgrade pip
+          pip install mysql-connector-python
+
+      - name: Wait for MySQL and Initialize Database
+        run: python init_db.py
 
       - name: Run Cypress tests (Allure)
         run: npm run test
