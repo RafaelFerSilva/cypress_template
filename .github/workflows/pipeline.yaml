@@ -74,9 +74,51 @@ jobs:
       - name: Generate Allure report
         run: npm run report:cy
 
-      - name: Upload Allure report
+      - name: Upload Allure Results
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: allure-report
-          path: allure-report
-          retention-days: 1
+          name: allure-results
+          path: allure-results
+          retention-days: 3
+
+  
+  deploy:
+    needs: cypress-run
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      actions: read
+      checks: write
+      contents: read
+      pull-requests: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    if: always()
+
+    steps:
+    - name: Download Allure results
+      uses: actions/download-artifact@v4
+      with:
+        name: allure-results
+        path: ./allure-results
+
+    - name: Generate Allure Report
+      uses: simple-elf/allure-report-action@v1
+      with:
+        allure_results: ./allure-results
+        allure_report: ./allure-report
+
+    - name: Setup Pages
+      uses: actions/configure-pages@v5
+
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: './allure-report'
+
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4
