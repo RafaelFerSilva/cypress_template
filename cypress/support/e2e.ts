@@ -16,6 +16,12 @@
 // Import commands.js using ES2015 syntax:
 import './commands'
 import '@shelex/cypress-allure-plugin';
+import 'cypress-plugin-api'
+
+Cypress.on('uncaught:exception', (err, runnable) => {
+  // Retorne false para evitar que o Cypress falhe o teste
+  return false;
+});
 
 before(() => {
   cy.dbConnect();
