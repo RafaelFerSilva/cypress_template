@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
     "target": "es5",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "lib": ["es5", "dom"],
     "types": ["cypress"],
     "module": "commonjs",

@@ -1678,3 +1678,87 @@ describe('Book Store API', () => {
 Acima temos um exemplo de como realizar requisições para uma API e validar o retorno das mesmas.
 
 ![image.png](reader_images/image%202.png)
+
+# Typescript decorators
+Para facilitar a utilização dos steps do Allure, utilizamos decorators para adicionar anotações diretamente nos métodos, e assim conseguimos deixar os métodos mais simples sem precisar identificar o step dentro do método.
+
+@AllureStep() será um decorator que criamos para adicionar steps nos tests de forma automática. Para isso vamos criar um arquivo **utils/allure-step.decorator**
+
+    export function AllureStep(stepName?: string) {
+      return function (
+        target: Object,
+        propertyKey: string,
+        descriptor?: TypedPropertyDescriptor<any>
+      ): TypedPropertyDescriptor<any> | void {
+        if (!descriptor) {
+          // Decorador aplicado em algo que não é método de instância
+          // Apenas retorna sem modificar nada
+          console.warn(`@AllureStep: Decorador aplicado em algo que não é método: ${propertyKey}`);
+          return;
+        }
+
+        const originalMethod = descriptor.value;
+
+        if (typeof originalMethod !== 'function') {
+          console.warn(`@AllureStep: Decorador aplicado em algo que não é função: ${propertyKey}`);
+          return descriptor;
+        }
+
+        descriptor.value = function (...args: any[]) {
+          const name = stepName || `${propertyKey} ${args.join(', ')}`.trim();
+          cy.allure().startStep(name);
+
+          try {
+            const result = originalMethod.apply(this, args);
+            cy.then(() => {
+              cy.allure().endStep();
+            });
+            return result;
+          } catch (error) {
+            cy.allure().endStep();
+            throw error;
+          }
+        };
+
+        return descriptor;
+      };
+    }
+
+Precisamos também atualizar o **tsconfig.json** para incluir o suporte ao decorator.
+
+    {
+      "compilerOptions": {
+        "target": "es5",
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "lib": ["es5", "dom"],
+        "types": ["cypress"],
+        "module": "commonjs",
+        "esModuleInterop": true,
+        "allowJs": true,
+        "baseUrl": ".",
+        "paths": {
+          "*": ["./*"]
+        }
+      },
+      "include": ["**/*.ts"]
+    }
+
+O objetivo é que o arquivo de page fique da seguinte forma:
+
+    import { AllureStep } from '../utils/allure-step.decorator';
+
+    export default class HomePage {
+      @AllureStep()
+      visitHomePage() {
+        cy.visit('/');
+      }
+
+      @AllureStep('Validate Home Page Loaded')
+      validateHomePageLoaded() {
+        cy.get('header img[src="/images/Toolsqa.jpg"]', { timeout: 10000 })
+        .should('be.visible')
+      }
+    }
+  
+Se utilizar o decorator @AllureStep, os passos serão automaticamente registrados no relatório Allure, facilitando a rastreabilidade e análise dos testes. Se não passarmos nenhuma string para o decorator ele utiliza o próprio nome do método decorado, caso passe uma string ele irá utilizar a mesma.

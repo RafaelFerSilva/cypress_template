@@ -1,11 +1,13 @@
+import { AllureStep } from '../utils/allure-step.decorator';
+
 export default class HomePage {
+  @AllureStep()
   visitHomePage() {
-    cy.allure().logStep('Visit Home Page');
     cy.visit('/');
   }
 
+  @AllureStep('Validate Home Page Loaded')
   validateHomePageLoaded() {
-    cy.allure().logStep('Validate home page is loaded successfully');
     cy.get('header img[src="/images/Toolsqa.jpg"]', { timeout: 10000 })
     .should('be.visible')
   }
