@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "cypress-plugin-api": "^2.11.2",
+    "cypress-xpath": "^2.0.1",
     "dotenv": "^16.5.0",
     "mysql2": "^3.14.1"
   }
